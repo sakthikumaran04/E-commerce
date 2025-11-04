@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import pool from "../db.js";
 
+//Auth controller checkpoint
 
 export const signup = async (req, res) => {
   try {
