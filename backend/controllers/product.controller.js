@@ -3,7 +3,7 @@ import multer from "multer";
 import client from "../configs/elasticsearch.config.js";
 import fs from "fs";
 
-
+//Product controller checkpoint
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const dir = "uploads/product-images";
