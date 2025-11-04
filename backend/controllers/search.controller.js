@@ -1,7 +1,7 @@
 import pool from "../db.js";
 import client from "../configs/elasticsearch.config.js";
 
-
+//Search controller checkpoint
 
 const BASE_URL = process.env.BASE_URL || "http://localhost:5000";
 const UPLOAD_PATH = process.env.UPLOAD_PATH || "/uploads/product-images/";
