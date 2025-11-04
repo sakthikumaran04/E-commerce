@@ -1,5 +1,5 @@
 import pool from "../db.js";
-
+//Category controller checkpoint
 export const addCategory = async (req, res) => {
   try {
     const { category_name, category_desc } = req.body;
