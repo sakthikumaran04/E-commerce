@@ -1,13 +1,16 @@
 import { Client } from "@elastic/elasticsearch";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const client = new Client({
-  node: "https://localhost:9200",
+  node: process.env.ELASTICSEARCH_NODE,
   auth: {
-    username: "elastic",
-    password: "=Acv=NWk+=HoMSLXC6Wj", 
+    username: process.env.ELASTICSEARCH_USERNAME,
+    password: process.env.ELASTICSEARCH_PASSWORD,
   },
   tls: {
-    rejectUnauthorized: false,
+    rejectUnauthorized: false, // allow self-signed cert
   },
 });
 

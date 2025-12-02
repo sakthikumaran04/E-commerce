@@ -1,4 +1,4 @@
-# Use Node.js 20
+# Use Node.js 20 as base
 FROM node:20
 
 # Set working directory
@@ -10,11 +10,12 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
-# Copy all files
+# Copy all backend files
 COPY . .
 
-# Expose frontend dev port (default 5173 for Vite)
-EXPOSE 5173
+# Expose backend port (change if your server uses a different port)
+EXPOSE 5000
 
-# Start frontend dev server
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+# Start backend
+CMD ["node", "index.js"]
+

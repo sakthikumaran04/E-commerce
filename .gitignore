@@ -17,3 +17,9 @@ Thumbs.db
 # Docker
 *.dockerfile
 docker-compose.override.yml
+mysql-data/
+es-data/
+db-init/
+node_modules/
+.env
+

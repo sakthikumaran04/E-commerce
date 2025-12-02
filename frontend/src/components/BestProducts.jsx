@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Card, CardContent } from './ui/card';
 import { Link } from 'react-router-dom';
 import { exampleImage } from '@/utils/images';
@@ -11,6 +11,9 @@ function BestProducts({ categoryId }) {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(true);
+
+    // ref to the section so we can scroll to it
+    const sectionRef = useRef(null);
 
     useEffect(() => {
         const fetchCategoryName = async () => {
@@ -46,27 +49,35 @@ function BestProducts({ categoryId }) {
         if (categoryId) fetchProducts();
     }, [categoryId, currentPage]);
 
+    // When loading finishes (i.e., products updated), scroll the section into view
+    useEffect(() => {
+        if (!loading && sectionRef.current) {
+            sectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }, [loading]); // triggers when loading changes to false
+
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages) {
             setCurrentPage(page);
+            // we do NOT scroll here — we wait for loading to finish (see effect above)
         }
     };
 
     return (
-        <section className='my-10'>
+        <section ref={sectionRef} className='my-10'>
             <h2 className="text-2xl font-semibold mb-4">Best on {categoryName}</h2>
             {loading ? (
-                <p className="text-gray-500">Loading...</p>
+                <p className="text-gray-500 min-h-[200px]">Loading...</p>
             ) : (
                 <>
                     {products.length === 0 ? (
                         <p>No products found in this category.</p>
                     ) : (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        // give the grid a min height to reduce layout jumps (optional)
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[300px]">
                             {products.map((product) => (
                                 <Link key={product.product_id} to={`/product/${product.product_id}`}>
                                     <Card
-                                        key={product.product_id}
                                         className="shadow-md hover:shadow-lg transition-all cursor-pointer"
                                     >
                                         <CardContent className="p-4">
@@ -98,6 +109,7 @@ function BestProducts({ categoryId }) {
                     <div className="flex justify-center items-center gap-4 mt-8">
                         <button
                             onClick={() => handlePageChange(currentPage - 1)}
+                            onMouseDown={(e) => e.preventDefault()} // prevent focus jump on click
                             disabled={currentPage === 1}
                             className="px-3 py-1 border rounded-lg disabled:opacity-50"
                         >
@@ -110,6 +122,7 @@ function BestProducts({ categoryId }) {
 
                         <button
                             onClick={() => handlePageChange(currentPage + 1)}
+                            onMouseDown={(e) => e.preventDefault()} // prevent focus jump on click
                             disabled={currentPage === totalPages}
                             className="px-3 py-1 border rounded-lg disabled:opacity-50"
                         >
@@ -122,4 +135,4 @@ function BestProducts({ categoryId }) {
     )
 }
 
-export default BestProducts
+export default BestProducts;

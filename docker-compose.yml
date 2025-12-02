@@ -1,0 +1,56 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - db
+      - elasticsearch
+    networks:
+      - e-commerce_default
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    networks:
+      - e-commerce_default
+
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: ecommerce
+      MYSQL_USER: ecom_app
+      MYSQL_PASSWORD: StrongPassword123!
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./db-init:/docker-entrypoint-initdb.d
+    networks:
+      - e-commerce_default
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.2
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - ELASTIC_PASSWORD=elasticpassword
+      - xpack.security.enabled=true
+    ports:
+      - "9201:9200"
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+    networks:
+      - e-commerce_default
+
+networks:
+  e-commerce_default:
+    driver: bridge
+
+volumes:
+  mysql-data:
+  es-data:
